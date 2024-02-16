@@ -1,189 +1,95 @@
-const {User,PrivateEvents, Guest, PublicEvent, Blogs, Order} = require("./model")
-//User Section Start
+const { UserModel, OrderModel, ProductModel, ReviewModel, VisitorModel } = require("./model")
+// User Section Start
 
-
-exports.SaveUser = (req,res) =>
-{
-    const {fname,email,phone,pass1,img} = req.body
-
-    if(fname && email && phone && pass1)
-    {
-        User.create({
-            fname,
-            email,
-            phone,
-            pass1,
-            img:img
-        })
-         .then(data=>res.json(data))
-        console.log(req.body);
-    }
-    else
-    {
-        console.log("Fill All Data");
-    }
-}
-exports.FindUser = (req,res) =>
-{
-    User.find()
-     .then(user=>res.json(user))
+exports.CreateUser = (req, res) => {
+    UserModel.create(req.body)
+        .then(data => res.send(req.body))
+        .catch(err=>console.log(err))
 }
 exports.UpdateUser = (req, res) =>
 {
     const id = req.params.id
-    User.findByIdAndUpdate(id,req.body,{useFindAndModify:false})
+    UserModel.findByIdAndUpdate(id, req.body)
         .then(data => res.send(data))
         .catch(err=>console.log(err))
+}
+exports.FindUser = (req, res) => {
+  UserModel.find().then((data) => res.send(data));
+};
 
-}
-//User Section End
+// User Section End
 
-//Private Event Section Start
-exports.createPrivateEvents= (req,res) =>
-{
-    const {id,fname,email,phone,event_name,event_type,g_num,rand_id}=req.body
-    if(fname && email && phone && event_name && event_type && g_num)
-    {
-        PrivateEvents.create({
-            id,
-            fname,
-            email,
-            phone,
-            event_name,
-            event_type,
-            g_num,
-            rand_id
-            
-        })
-        .then(user=>res.json(user))
-        console.log(req.body);
-    }
-}
-exports.getPrivateEvents = (req,res) =>
-{
-    PrivateEvents.find()
-     .then(data=>res.json(data))
-}
+// Order Section Start
 
-// Private Event Section End
-
-//Guest Secton Start
-exports.createGuestList = (req,res) =>
-{
-    const {id,guest} = req.body
-    Guest.create({
-        id,
-        guest
-    })
-     .then(data=>res.json(data))
-
-}
-exports.CreateGuestData = (req,res) =>
-{
-    const id = req.params.id
-    Guest.findByIdAndUpdate(id,req.body,{useFindAndModify:false})
-     .then(data=>res.json(data))
-}
-exports.getGuest = (req,res) =>
-{
-    Guest.find()
-     .then(data=>res.json(data))
-}
-exports.AuthGuest = (req,res)=>
-{
-    const id = req.params.id
-    const data = JSON.parse(req.body.data)
-    Guest.findByIdAndUpdate(id,data,{useFindAndModify:false})
-     .then(data=>res.json(data))
-    
-    
-}
-//Guest Section End
-
-//Public Event Section Start
-exports.CreatePublicEvents = (req,res)=>
-{
-    const data = req.body
-    PublicEvent.create(data)
-     .then(dat=>res.json(dat))
-
-}
-exports.FindPublicEvents = (req,res) =>
-{
-    PublicEvent.find()
-     .then(data=>res.send(data))
-}
-exports.updatePublicEvents = (req, res) =>
-{
-    const id = req.params.id
-    PublicEvent.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
+exports.FindOrder = (req, res) => {
+    OrderModel.find()
         .then(data => res.send(data))
         .catch(err=>console.log(err))
+}
 
-}
-exports.deletePublicEvent = (req, res) =>
+exports.CreateOrder = (req, res) =>
 {
-    const id = req.params.id
-    PublicEvent.findByIdAndDelete(id)
+    OrderModel.create({order:req.body})
         .then(data => res.send(data))
-        .catch(err => console.log(err))
-    
-    
-}
-exports.privateEventDelete = (req,res)=>
-{
-    const id = req.params.id
-    PrivateEvents.findByIdAndDelete(id)
-     .then(user=>res.send(user))
-     .catch(err=>console.log(err))
-}
-exports.guestDeleteData=(req,res) =>
-{
-    const id = req.params.id
-    Guest.findByIdAndDelete(id)
-     .then(data=>res.send(data))
-     .catch(err=>console.log(err))
-}
-exports.createBlogs = (req,res) =>
-{
-    const data = req.body
-    Blogs.create(data)
-     .then(blog=>res.json(blog))
-     .catch(err=>console.log(err))
-}
-exports.findBlogs = (req,res) =>
-{
-    Blogs.find()
-     .then(blog=>res.json(blog))
-     .catch(err=>console.log(err))
-}
-exports.updateBlogs = (req,res) =>
-{
-    const id = req.params.id
-    Blogs.findByIdAndUpdate(id,req.body,{useFindAndModify:false})
-     .then(blog=>res.send(blog))
-     .catch(err=>console.log(err))
-}
-exports.CreateOrder = (req,res) =>
-{
-    Order.create(req.body)
-        .then(data=>res.json(data))
         .catch(err=>console.log(err))
 }
-exports.findOrder = (req,res) =>
-{
-    Order.find()
-        .then(data=>res.json(data))
+exports.UpdateOrder = (req, res) => {
+    const id = req.params.id
+    OrderModel.findByIdAndUpdate(id, req.body)
+    .then(data=>res.send(data))
 }
-exports.updateOrder = (req,res) =>
+
+exports.DeleteOrder = (req, res) =>
 {
     const id = req.params.id
-    Order.findByIdAndUpdate(id,req.body,{useFindAndModify:false})
+    OrderModel.findByIdAndDelete(id)
+    .then(data=>res.send(data))
+}
+
+
+// Order Section End
+
+//Product Section Start
+
+exports.AddProductData = (req, res) => {
+    ProductModel.create(req.body)
         .then(data=>res.send(data))
 }
-exports.CencelOrder = (req,res)=>
+exports.FindProduct = (req,res) =>
+{
+    ProductModel.find()
+        .then(data => res.send(data))
+        .catch(err=>console.log(err))
+}
+    
+//Product Section End
+
+//Review Section Start
+exports.UpdateProducts = (req, res) =>
 {
     const id = req.params.id
-    Order.findByIdAndDelete(id)
-        .then(data=>res.json(data))
+    ProductModel.findByIdAndUpdate(id, req.body)
+        .then(data=>res.send(data))
+}    
+// Revire Section End
+
+//Visitor Section Start
+exports.CreateVisitor = (req, res) => {
+    VisitorModel.create({
+        visitors: req.body.visitor,
+        expireDate:req.body.expireDate
+    })
+        .then(data=>res.send(data))
 }
+exports.UpdateVisitor = (req, res) =>
+{
+    const id = req.params.id
+    VisitorModel.findByIdAndUpdate(id, req.body)
+        .then(data=>res.send(data))
+}
+exports.FindVisitor = (req, res) => {
+    VisitorModel.find()
+        .then(visitor=>res.send(visitor))
+}
+
+//Visitor Section End

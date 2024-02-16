@@ -1,61 +1,31 @@
-const mongoose = require('mongoose')
+const { default: mongoose } = require("mongoose");
 
-const user = mongoose.Schema({
+const User = mongoose.Schema({
     img:String,
-    fname:String,
-    email:String,
-    phone:String,
-    pass1:String
+    name: String,
+    email: String,
+    phone: String,
+    address: Array,
+    pass:String
 })
-const privateEvents = mongoose.Schema({
-    id:String,
-    fname:String,
-    email:String,
-    phone:String,
-    event_name:String,
-    event_type:String,
-    g_num:String,
-    rand_id:Number
-})
-
-const guest = mongoose.Schema({
-    id:Number,
-    guest:Array
-})
-const publicEvent = mongoose.Schema({
-    userName:String,
-    userImg:String,
-    postedTime:String,
-    name:String,
-    place:String,
-    time:String,
-    date:String,
-    price:String,
-    eventImg:String,
-    eventType:String,
-    des:String,
-    status:String,
-    id:String
-})
-const blogs = mongoose.Schema({
-    userName:String,
-    userId:String,
-    userImg:String,
-    postedTime:String,
-    des:String,
-    blogImg:String,
-    name:String,
-    like:Array,
-    comment:Array,
-    share:Array
-})
-const order = mongoose.Schema({
+const Order = mongoose.Schema({
     order:Object
 })
-const User = mongoose.model("user",user)
-const PrivateEvents =mongoose.model("Private_Events",privateEvents)
-const Guest = mongoose.model("Guest",guest)
-const PublicEvent = mongoose.model("PublicEvents",publicEvent)
-const Blogs = mongoose.model("Blogs",blogs)
-const Order = mongoose.model("Order",order)
-module.exports = {User,PrivateEvents,Guest,PublicEvent,Blogs,Order}
+
+const Product = mongoose.Schema({
+    data:Array
+})
+const Review = mongoose.Schema({
+    product_id:String,
+    reviews:Array
+})
+const visitor = mongoose.Schema({
+    vistors: Array,
+    expireDate:String
+})
+const UserModel = mongoose.model("users", User)
+const OrderModel = mongoose.model("orders", Order)
+const ProductModel = mongoose.model("products", Product)
+const ReviewModel = mongoose.model("reviews", Review)
+const VisitorModel = mongoose.model("visitor",visitor)
+module.exports = {UserModel,OrderModel,ProductModel,ReviewModel,VisitorModel}
