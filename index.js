@@ -1,41 +1,89 @@
 const express = require("express")
 const app = express()
+const http = require('http').createServer(app)
 const dotenv = require("dotenv")
 const bodyParser = require("body-parser")
 const ConnectDB = require("./database/connect")
 const controller= require("./database/controller")
 const { default: mongoose } = require("mongoose")
 const cors = require("cors")
+const { Socket, Server } = require("socket.io")
+const Router = require("./Routes/Router")
+const { log } = require("console")
+const { send } = require("process")
+const MassageRouter = require("./Routes/MassageRoutes/MassageRoutes")
 const PORT = process.env.PORT || 3000
 mongoose.Promise = global.Promise
+const io = new Server(http, {
+  cors: {
+    origin:"*"
+  }
+})
 
 dotenv.config()
 
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(bodyParser.json())
-
-console.log(process.env.PORT);
-
-ConnectDB()
+ConnectDB();
 
 app.use(cors())
-app.get("/",(req,res)=>{
-    res.send("Server is Runnig")
+let users =[]
+io.on("connect", (socket) => {
+  
+  console.log(`User is connected on ${socket.id}`);
+  socket.on('send-user', (user) => {
+    const found = users.some(data => data._id === user._id)
+    if (found) {
+      const index = users.findIndex((data) => data._id === user._id);
+      users[index] = {
+        ...user,
+        room: socket.id
+      }
+    }
+    else {
+      users.push({
+        ...user,
+        room: socket.id
+      
+      })
+    }
+  })
+  socket.on('send-massage', (massage,room) => {
+   try {
+    io.to(room).emit("receved-massage", massage);
+   } catch (error) {
+    console.log(error);
+   }
+    
+  })
+ 
+  // socket.on("sendUser", (user) => {
+  //   if (user)
+  //   {
+  //     users[user._id]=socket.id
+  //     }
+  // })
+  socket.on('getUsers', (massage) => {
+   console.log('calling');
+    io.emit("get-users", users);
+  })
+  io.on("disconnect", (socket) => {
+    console.log(`disconnect ${socket.id}`);
+ })
+  io.emit("activeUser", users)
+  socket.on("disconnect", () => {
+    console.log(`user Logout`);
+    users = users.filter(data => data.room !== socket.id)
+    io.emit("get-users", users);
+  })
+  
 })
-app.post("/api/createuser", controller.CreateUser)
-app.get("/api/getuser", controller.FindUser)
-app.post("/api/createorder", controller.CreateOrder)
-app.get("/api/orders", controller.FindOrder)
-app.post("/api/updateuser/:id", controller.UpdateUser)
-app.post("/api/updateorder/:id", controller.UpdateOrder)
-app.post("/api/addproducts", controller.AddProductData)
-app.get("/api/products", controller.FindProduct)
-app.post("/api/updateproduct/:id", controller.UpdateProducts)
-app.delete("/api/deleteorder/:id", controller.DeleteOrder)
-app.post("/api/createvisitor", controller.CreateVisitor)
-app.get("/api/visitors", controller.FindVisitor)
-app.put("/api/update/visitor/:id",controller.UpdateVisitor)
-app.listen(PORT,()=>{
-    console.log(`Server is runnig on ${PORT}` );
+
+app.use("/api/user/", Router)
+
+app.use('/api/massage/',MassageRouter)
+http.listen(3000, () => {
+  console.log('server is running');
 })
+
 

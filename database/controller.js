@@ -1,9 +1,9 @@
-const { UserModel, OrderModel, ProductModel, ReviewModel, VisitorModel } = require("./model")
+const { UserModel, MassageModel } = require("./model")
 // User Section Start
 
 exports.CreateUser = (req, res) => {
     UserModel.create(req.body)
-        .then(data => res.send(req.body))
+        .then(data => res.send(data))
         .catch(err=>console.log(err))
 }
 exports.UpdateUser = (req, res) =>
@@ -19,77 +19,39 @@ exports.FindUser = (req, res) => {
 
 // User Section End
 
-// Order Section Start
+// Massage Section Start
 
-exports.FindOrder = (req, res) => {
-    OrderModel.find()
-        .then(data => res.send(data))
-        .catch(err=>console.log(err))
-}
-
-exports.CreateOrder = (req, res) =>
+exports.CreateMassage = (req, res) =>
 {
-    OrderModel.create({order:req.body})
-        .then(data => res.send(data))
-        .catch(err=>console.log(err))
-}
-exports.UpdateOrder = (req, res) => {
-    const id = req.params.id
-    OrderModel.findByIdAndUpdate(id, req.body)
-    .then(data=>res.send(data))
-}
-
-exports.DeleteOrder = (req, res) =>
-{
-    const id = req.params.id
-    OrderModel.findByIdAndDelete(id)
-    .then(data=>res.send(data))
-}
-
-
-// Order Section End
-
-//Product Section Start
-
-exports.AddProductData = (req, res) => {
-    ProductModel.create(req.body)
-        .then(data=>res.send(data))
-}
-exports.FindProduct = (req,res) =>
-{
-    ProductModel.find()
-        .then(data => res.send(data))
-        .catch(err=>console.log(err))
-}
+  console.log('runned');
+  try {
+    MassageModel.create(req.body)
+      .then(massage => res.send(massage))
     
-//Product Section End
+  } catch (error) {
+    console.log(error);
+  }
+  
+}
 
-//Review Section Start
-exports.UpdateProducts = (req, res) =>
+exports.UpdateMassage = (req, res) =>
 {
-    const id = req.params.id
-    ProductModel.findByIdAndUpdate(id, req.body)
-        .then(data=>res.send(data))
-}    
-// Revire Section End
+  const id = req.params.id
 
-//Visitor Section Start
-exports.CreateVisitor = (req, res) => {
-    VisitorModel.create({
-        visitors: req.body.visitor,
-        expireDate:req.body.expireDate
-    })
-        .then(data=>res.send(data))
+  try {
+    MassageModel.findByIdAndUpdate(id, req.body)
+      .then(data => res.send(data))
+    
+  } catch (error) {
+    console.log(error);
+  }
 }
-exports.UpdateVisitor = (req, res) =>
+  
+exports.FindMassage = (req, res) =>
 {
-    const id = req.params.id
-    VisitorModel.findByIdAndUpdate(id, req.body)
-        .then(data=>res.send(data))
+  MassageModel.find()
+    .then(data => res.send(data))
+    .catch(err=>console.log(err))
 }
-exports.FindVisitor = (req, res) => {
-    VisitorModel.find()
-        .then(visitor=>res.send(visitor))
-}
-
-//Visitor Section End
+  
+//Massage Section End
