@@ -47,16 +47,29 @@ io.on("connect", (socket) => {
       
       })
     }
+    io.emit("get-users", users);
   })
   socket.on('send-massage', (massage,room) => {
    try {
-    io.to(room).emit("receved-massage", massage);
+     if (room)
+     {
+        io.to(room).emit("receved-massage", massage);
+     }
+   
    } catch (error) {
     console.log(error);
-   }
+    }
+  
     
   })
- 
+   socket.on("send-call", (room, payload) => {
+     
+     io.to(room).emit("incomming-call", payload);
+   });
+  socket.on("reject-call", (room, massage) => {
+     io.to(room).emit('reject-call',massage)
+   })
+  
   // socket.on("sendUser", (user) => {
   //   if (user)
   //   {
@@ -75,6 +88,7 @@ io.on("connect", (socket) => {
     console.log(`user Logout`);
     users = users.filter(data => data.room !== socket.id)
     io.emit("get-users", users);
+  
   })
   
 })
