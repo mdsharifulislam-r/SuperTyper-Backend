@@ -1,21 +1,29 @@
 const { default: mongoose } = require("mongoose");
+const { Socket } = require("socket.io");
 
-const User = mongoose.Schema({
-    img:String,
-    name: String,
-    email: String,
-    pass: String,
-    contacts:Array
+
+const UserSceme = mongoose.Schema({
+  name: String,
+  email: String,
+  image: String,
+  password: String,
+  isSocial: Boolean,
+  type: String,
+  social: Array,
+  following: Array,
+  followers:Array,
+  
+});
+
+const UserSkillScheme = mongoose.Schema({
+  userId: String,
+  daily: Array,
+  monthly:Array,
 })
 
-const massage = mongoose.Schema({
-    member:Array,
-    massages:Array
-})
 
+const UserModel = mongoose.model("user", UserSceme)
 
-const UserModel = mongoose.model("users", User)
+const UserSkillModel = mongoose.model("skill", UserSkillScheme)
 
-const MassageModel= mongoose.model('massages',massage)
-
-module.exports = { UserModel, MassageModel }
+module.exports={UserModel,UserSkillModel}
