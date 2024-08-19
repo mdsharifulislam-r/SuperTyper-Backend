@@ -1,9 +1,9 @@
 
 exports.checkHeader = async (req,res,next)=>{
  
-    const referer = req.headers['referer']
-
-    if(referer && referer=="https://supertyper.netlify.app/"){
+    const referer = req.headers['origin']
+    console.log(origin);
+    if(referer && referer=="https://supertyper.netlify.app"){
         
         next();
     }
