@@ -1,14 +1,17 @@
 
 exports.checkHeader = async (req,res,next)=>{
  
-    const referer = req.headers['origin']
-    console.log(origin);
-    if(referer && referer=="https://supertyper.netlify.app"){
-        
-        next();
-    }
-  
+    const referer = req.headers['user-agent']
+   if(referer.toLowerCase().includes('mozilla')){
+    next();
+   }else{
     res.send({
-        massage:"Arek Joner website hack kora thik na"
+        massage:'karo website hack kora thik na'
     })
+   }
+        
+        
+   
+  
+    
 }
