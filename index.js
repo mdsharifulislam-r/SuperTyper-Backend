@@ -15,7 +15,7 @@ app.use(express.urlencoded({extended:false}))
 app.use(express.json())
 app.use(
   cors({
-      origin:['https://supertyper.netlify.app/'],
+      origin:['https://supertyper.netlify.app'],
       credentials:true,
     
    
